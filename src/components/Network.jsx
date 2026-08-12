@@ -22,16 +22,16 @@ function getNodeColor(node, themes) {
 }
 
 function getNodeDomain(node) {
-  if (!node.url || node.url === "#") return "psychsafety";
+  if (!node.url || node.url === "#") return "default";
   if (node.url.includes("iterum.co.uk")) return "iterum";
   if (node.url.includes("tomgeraghty.co.uk")) return "tomgeraghty";
-  return "psychsafety";
+  return "default";
 }
 
 const DOMAIN_STYLE = {
   iterum:       { dash: "5,3",  strokeWidth: 2 },
   tomgeraghty:  { dash: "2,3",  strokeWidth: 2 },
-  psychsafety:  { dash: null,   strokeWidth: 1.5 },
+  default:      { dash: null,   strokeWidth: 1.5 },
 };
 
 function renderMultiThemeNode(selection, getR, themes) {
@@ -130,14 +130,8 @@ function DetailPanel({ node, onClose, onSelectNode, copied, setCopied, getConnec
   };
 
   useEffect(() => {
-    if (!node.slug) return;
-    fetch(`https://psychsafety.com/wp-json/wp/v2/posts?slug=${node.slug}&_embed=true`)
-      .then(r => r.json())
-      .then(data => {
-        const img = data?.[0]?._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-        if (img) setFeaturedImage(img);
-      })
-      .catch(() => {});
+    // Disabled for this mock POC — no live WordPress image fetching.
+    return;
   }, [node.slug]);
 
   return (
@@ -256,7 +250,7 @@ function DetailPanel({ node, onClose, onSelectNode, copied, setCopied, getConnec
               )}
               {node.relatedArticles?.length > 0 && (
                 <div style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid #f0f0f0" }}>
-                  <div style={{ fontSize: "10px", color: "#bbb", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Related psychsafety.com articles</div>
+                  <div style={{ fontSize: "10px", color: "#bbb", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Related articles</div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
                     {node.relatedArticles.map(aid => {
                       const article = ARTICLE_NODES.find(n => n.id === aid);
@@ -984,24 +978,32 @@ export default function Network() {
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "7px", flexWrap: "wrap" }}>
           {!isMobile && (
             <>
-              <a href="https://psychsafety.com" target="_blank" rel="noreferrer"
-                style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0, background: "#1a1a2e", borderRadius: "6px", padding: "4px 8px" }}>
-                <img src="https://psychsafety.com/wp-content/uploads/2019/04/psych-safety-logo-white-300x222.png"
-                  alt="psychsafety.com" style={{ width: "48px", height: "auto", display: "block" }}
-                  onError={e => { e.target.style.display = "none"; }} />
-              </a>
+              <span style={{ display: "inline-flex", alignItems: "center", background: "#2b2b40", borderRadius: "8px", padding: "4px 6px", flexShrink: 0 }}>
+                <svg width="28" height="28" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <ellipse cx="50" cy="52" rx="46" ry="38" fill="#2b2b40"/>
+                  <circle cx="33" cy="46" r="11" fill="white"/>
+                  <circle cx="36" cy="46" r="5" fill="#111"/>
+                  <circle cx="67" cy="46" r="11" fill="white"/>
+                  <circle cx="63" cy="48" r="5" fill="#111"/>
+                  <path d="M30 66 Q50 80 70 64" fill="none" stroke="white" strokeWidth="5" strokeLinecap="round"/>
+                </svg>
+              </span>
               <span style={{ fontSize: "14px", fontWeight: 600, color: DM.text, whiteSpace: "nowrap" }}>
-                Psychological Safety Knowledge Network
+                Nodes &amp; Nonsense — mock POC
               </span>
             </>
           )}
           {isMobile && (
-            <a href="https://psychsafety.com" target="_blank" rel="noreferrer"
-              style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0, background: "#1a1a2e", borderRadius: "6px", padding: "3px 6px" }}>
-              <img src="https://psychsafety.com/wp-content/uploads/2019/04/psych-safety-logo-white-300x222.png"
-                alt="psychsafety.com" style={{ width: "36px", height: "auto", display: "block" }}
-                onError={e => { e.target.style.display = "none"; }} />
-            </a>
+            <span style={{ display: "inline-flex", alignItems: "center", background: "#2b2b40", borderRadius: "6px", padding: "3px 5px", flexShrink: 0 }}>
+              <svg width="22" height="22" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="50" cy="52" rx="46" ry="38" fill="#2b2b40"/>
+                <circle cx="33" cy="46" r="11" fill="white"/>
+                <circle cx="36" cy="46" r="5" fill="#111"/>
+                <circle cx="67" cy="46" r="11" fill="white"/>
+                <circle cx="63" cy="48" r="5" fill="#111"/>
+                <path d="M30 66 Q50 80 70 64" fill="none" stroke="white" strokeWidth="5" strokeLinecap="round"/>
+              </svg>
+            </span>
           )}
           {!isMobile && (
             <span style={{ fontSize: "10px", color: "#ccc", whiteSpace: "nowrap" }}>

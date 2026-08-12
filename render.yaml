@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: knowledge-map
+    name: nodes-and-nonsense
     runtime: static
     buildCommand: npm install && npm run build
     staticPublishPath: dist
